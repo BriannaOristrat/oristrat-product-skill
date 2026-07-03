@@ -39,6 +39,8 @@ SECRET_PATTERNS = [
     ("google-api-key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b")),
     ("slack-token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{20,}\b")),
     ("jwt", re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b")),
+    ("cn-mobile", re.compile(r"\b1[3-9]\d{9}\b")),
+    ("local-user-path", re.compile(r"(?i)\b[a-z]:[\\/](?:users|用户)[\\/][^\\/\s]+")),
 ]
 
 ASSIGNMENT_PATTERN = re.compile(
@@ -153,7 +155,10 @@ def scan_file(path: Path) -> list[Finding]:
             value = match.group(3).strip()
             if looks_safe_assignment_value(value):
                 continue
-            if len(value) >= 16 or entropy(value) >= 3.2:
+            key_lower = key.lower().replace("-", "_")
+            if key_lower in {"password", "passwd", "pwd", "tenant_code"}:
+                findings.append(Finding(path, line_no, f"literal-{key}", redact(value)))
+            elif len(value) >= 16 or entropy(value) >= 3.2:
                 findings.append(Finding(path, line_no, f"literal-{key}", redact(value)))
     return findings
 

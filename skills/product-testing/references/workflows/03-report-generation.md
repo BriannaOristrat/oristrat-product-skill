@@ -15,7 +15,7 @@
 ## 默认工具
 
 ```powershell
-python tools/generate_delivery_artifacts.py
+python skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 该工具负责：
@@ -26,6 +26,13 @@ python tools/generate_delivery_artifacts.py
 - 校验三份报告结论一致性。
 - 阻断 `02_实际交付报告` 中的本机路径泄漏。
 - 打包最终交付 zip。
+
+默认输出目录按仓库所在位置推导；如需指定交付目录，设置：
+
+```powershell
+$env:ORISTRAT_REPORT_DIR="<交付报告目录>"
+python skills/product-testing/scripts/generate_delivery_artifacts.py
+```
 
 ## 报告标题规则
 
