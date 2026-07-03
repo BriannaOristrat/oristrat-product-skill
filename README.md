@@ -1,42 +1,37 @@
 # oristrat-product-skill
 
-产品测试与交付报告工作流仓库。
+Oristrat 产品团队的多 Skill 仓库。这里不是单个测试报告项目，而是集中维护多个可复用 Skill、对应参考文档、脚本和仓库级安全门禁。
 
-本仓库按 GitHub 可维护结构组织。Obsidian 不再维护第二份目录，直接使用本仓库内的 Markdown 文件：
-
-- GitHub / repo 主结构：`00_入口/01_产物/github/测试报告skill/`
-- Obsidian 直接入口：`00_入口/01_产物/github/测试报告skill/README.md`
+Obsidian 不再维护第二份目录，直接把本仓库作为可读目录打开；所有链接使用仓库内相对 Markdown 链接，GitHub 和 Obsidian 共用同一套结构。
 
 ## 快速入口
 
 | 入口 | 用途 |
 |---|---|
-| [总览](docs/00-overview.md) | 阅读整体结构、产物边界和执行顺序 |
-| [测试任务启动](docs/workflows/01-test-task-intake.md) | 明确范围、环境、账号、风险和写入权限 |
-| [测试执行与证据采集](docs/workflows/02-test-execution-and-evidence.md) | 执行手工、自动化、压测和大数据专项 |
-| [报告生成](docs/workflows/03-report-generation.md) | 生成运行过程证据报告、实际交付报告和业务论证报告 |
-| [交付包归档](docs/workflows/04-delivery-package-and-archive.md) | 生成 zip、清理临时文件、归档最终产物 |
-| [Skill / 工具矩阵](docs/matrices/skill-tool-responsibility-matrix.md) | 明确 Skill、脚本和检查工具职责 |
-| [Obsidian 直接使用说明](docs/matrices/obsidian-usage-map.md) | 明确 Obsidian 如何直接读取 GitHub 仓库内容 |
+| [Skill Catalog](catalog/README.md) | 查看当前仓库收录的 Skill |
+| [仓库结构说明](docs/repository-structure.md) | 查看多 Skill 仓库的目录规范 |
+| [Skill 来源治理](docs/skill-source-governance.md) | 区分自研、外部依赖、本地个人和临时产物 |
+| [Obsidian 直接使用说明](docs/obsidian-usage.md) | 查看 GitHub / Obsidian 共用方式 |
+| [GitHub 提交安全门禁](docs/github-submit-safety-gate.md) | 提交前检查账号、密码、token、key 等敏感信息 |
+| [Product Testing Skill](skills/product-testing/SKILL.md) | 产品测试、证据报告、实际交付报告工作流 |
+| [Product Testing 总览](skills/product-testing/references/overview.md) | 当前测试报告 Skill 的流程和产物总览 |
 
-## 最重要的门禁
+## 当前 Skill
 
-正式交付或提交 GitHub 前必须通过这些检查：
-
-- [运行过程证据报告检查](docs/checklists/01-evidence-report-review.md)
-- [实际交付报告检查](docs/checklists/02-actual-delivery-report-review.md)
-- [五轮业务论证与结果检查](docs/checklists/03-five-round-report-review.md)
-- [PDF / HTML 安全门禁](docs/checklists/04-pdf-html-safety-gate.md)
-- [最终交付门禁](docs/checklists/05-final-delivery-gate.md)
-- [GitHub 提交安全门禁](docs/checklists/06-github-submit-safety-gate.md)
+| Skill | 路径 | 定位 |
+|---|---|---|
+| `product-testing` | [skills/product-testing/SKILL.md](skills/product-testing/SKILL.md) | 产品测试、运行过程证据报告、实际交付报告、交付包归档 |
+| `evidence-report-review` | [skills/evidence-report-review/SKILL.md](skills/evidence-report-review/SKILL.md) | 专门复核 `01_运行过程证据报告` |
+| `actual-delivery-report-review` | [skills/actual-delivery-report-review/SKILL.md](skills/actual-delivery-report-review/SKILL.md) | 专门复核客户可读的 `02_实际交付报告` |
+| `delivery-package-review` | [skills/delivery-package-review/SKILL.md](skills/delivery-package-review/SKILL.md) | 专门复核最终交付包、zip 和提交安全 |
 
 ## 结构原则
 
-1. `docs/workflows/` 写人如何执行流程。
-2. `docs/checklists/` 写交付前如何验收。
-3. `docs/matrices/` 写职责和产物映射。
-4. `docs/templates/` 写可复制模板。
-5. `skills/*/SKILL.md` 写 Agent 执行规范。
-6. `tools/` 放脚本；脚本必须由检查清单约束。
-7. Obsidian 直接读取 GitHub 主结构，不维护第二份文档。
-8. 提交 GitHub 前必须执行敏感信息强检查。
+1. 本仓库只正式收录 Oristrat 自研 Skill。
+2. 每个自研 Skill 独立放在 `skills/<skill-name>/`。
+3. 单个 Skill 内部只保留 `SKILL.md`、`references/`、`scripts/`、`assets/` 等执行所需内容。
+4. 外部 Skill、插件 Skill、本地个人 Skill 和任务临时产物不复制到本仓库。
+5. 根目录 `docs/` 只放跨 Skill 的仓库规则、Obsidian 说明、GitHub 提交门禁。
+6. 根目录 `tools/` 只放跨 Skill 的通用工具；某个 Skill 专用脚本放到该 Skill 的 `scripts/`。
+7. 根目录 `catalog/` 维护 Skill 目录，后续新增 Skill 先按 [Skill 来源治理](docs/skill-source-governance.md) 分类。
+8. 提交 GitHub 前必须通过 [GitHub 提交安全门禁](docs/github-submit-safety-gate.md)。

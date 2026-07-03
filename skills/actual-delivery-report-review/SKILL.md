@@ -7,7 +7,7 @@ description: Use when reviewing 02_实际交付报告 as the customer-facing tes
 
 Use this skill to review `02_实际交付报告.md/html/pdf`.
 
-Follow `docs/checklists/02-actual-delivery-report-review.md` and `docs/checklists/04-pdf-html-safety-gate.md`.
+Follow `../product-testing/references/checklists/02-actual-delivery-report-review.md` and `../product-testing/references/checklists/04-pdf-html-safety-gate.md`.
 
 ## Non-Negotiables
 

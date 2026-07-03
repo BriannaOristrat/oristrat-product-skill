@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_PATH = REPO_ROOT / "tools" / "generate_delivery_artifacts.py"
+SCRIPT_PATH = REPO_ROOT / "skills" / "product-testing" / "scripts" / "generate_delivery_artifacts.py"
 
 
 class _Styles(dict):
@@ -124,32 +124,28 @@ def _load_script(env):
     spec = importlib.util.spec_from_file_location(module_name, SCRIPT_PATH)
     module = importlib.util.module_from_spec(spec)
     with _install_dependency_stubs(), patch.dict(os.environ, env, clear=False):
-        if "ORISTRAT_REPORT_ROOT" not in env:
-            os.environ.pop("ORISTRAT_REPORT_ROOT", None)
+        for key in ("ORISTRAT_REPORT_DIR", "ORISTRAT_REPORT_ROOT"):
+            if key not in env:
+                os.environ.pop(key, None)
         assert spec.loader is not None
         spec.loader.exec_module(module)
     return module
 
 
 class GenerateDeliveryArtifactsCrossPlatformTest(unittest.TestCase):
-    def test_default_report_root_is_repository_root(self):
+    def test_default_report_dir_uses_skill_catalog_layout(self):
         module = _load_script({})
 
-        self.assertEqual(module.ROOT, REPO_ROOT)
         self.assertEqual(
             module.REPORT_DIR,
-            REPO_ROOT / "00_入口" / "01_产物" / "04_交付报告",
+            REPO_ROOT.parent.parent / "04_交付报告",
         )
 
-    def test_report_root_can_be_overridden_with_environment_variable(self):
-        custom_root = REPO_ROOT / "tmp" / "cross-platform-root"
-        module = _load_script({"ORISTRAT_REPORT_ROOT": str(custom_root)})
+    def test_report_dir_can_be_overridden_with_environment_variable(self):
+        custom_report_dir = REPO_ROOT / "tmp" / "cross-platform-report"
+        module = _load_script({"ORISTRAT_REPORT_DIR": str(custom_report_dir)})
 
-        self.assertEqual(module.ROOT, custom_root)
-        self.assertEqual(
-            module.REPORT_DIR,
-            custom_root / "00_入口" / "01_产物" / "04_交付报告",
-        )
+        self.assertEqual(module.REPORT_DIR, custom_report_dir)
 
     def test_pdf_table_uses_resolved_font_name_when_cjk_font_is_unavailable(self):
         module = _load_script({})

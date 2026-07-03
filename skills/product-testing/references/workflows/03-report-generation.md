@@ -18,14 +18,14 @@ macOS / Linux：
 
 ```bash
 python3 -m pip install -r requirements.txt
-python3 tools/generate_delivery_artifacts.py
+python3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 Windows PowerShell：
 
 ```powershell
 py -3 -m pip install -r requirements.txt
-py -3 tools/generate_delivery_artifacts.py
+py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 该工具负责：
@@ -37,7 +37,20 @@ py -3 tools/generate_delivery_artifacts.py
 - 阻断 `02_实际交付报告` 中的本机路径泄漏。
 - 打包最终交付 zip。
 
-默认从仓库根目录下的 `00_入口/01_产物/04_交付报告/` 读写交付内容。若需要使用其他根目录，可设置 `ORISTRAT_REPORT_ROOT`；若系统无法自动找到中文字体，可设置 `ORISTRAT_CJK_FONT` 或 `ORISTRAT_CJK_FONT_BOLD` 指向本机字体文件。
+默认输出目录按仓库所在位置推导；如需指定交付目录，可设置 `ORISTRAT_REPORT_DIR`。若系统无法自动找到中文字体，可设置 `ORISTRAT_CJK_FONT` 或 `ORISTRAT_CJK_FONT_BOLD` 指向本机字体文件。
+
+macOS / Linux：
+
+```bash
+ORISTRAT_REPORT_DIR="<交付报告目录>" python3 skills/product-testing/scripts/generate_delivery_artifacts.py
+```
+
+Windows PowerShell：
+
+```powershell
+$env:ORISTRAT_REPORT_DIR="<交付报告目录>"
+py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
+```
 
 ## 报告标题规则
 

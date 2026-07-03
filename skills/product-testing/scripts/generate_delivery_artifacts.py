@@ -27,21 +27,21 @@ from reportlab.platypus import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-LEGACY_WINDOWS_ROOT = Path(r"C:\Users\oristrat\Documents\文件夹")
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_REPORT_DIR = REPO_ROOT.parent.parent / "04_交付报告"
 
 
-def resolve_root():
-    configured = os.environ.get("ORISTRAT_REPORT_ROOT")
+def resolve_report_dir():
+    configured = os.environ.get("ORISTRAT_REPORT_DIR")
     if configured:
         return Path(configured).expanduser()
-    if os.name == "nt" and LEGACY_WINDOWS_ROOT.exists():
-        return LEGACY_WINDOWS_ROOT
-    return REPO_ROOT
+    legacy_root = os.environ.get("ORISTRAT_REPORT_ROOT")
+    if legacy_root:
+        return Path(legacy_root).expanduser() / "00_入口" / "01_产物" / "04_交付报告"
+    return DEFAULT_REPORT_DIR
 
 
-ROOT = resolve_root()
-REPORT_DIR = ROOT / "00_入口" / "01_产物" / "04_交付报告"
+REPORT_DIR = resolve_report_dir()
 EVIDENCE_DIR = REPORT_DIR / "evidence"
 SCREENSHOT_DIR = EVIDENCE_DIR / "screenshots"
 LOG_DIR = EVIDENCE_DIR / "playwright_logs"
@@ -53,8 +53,7 @@ APPENDIX_DIR = REPORT_DIR / "appendix"
 TASK_RESULT_PATH = LOG_DIR / "generation_task_creation.json"
 DATE_TEXT = "2026-07-02"
 PROJECT_NAME = "Oristrat AI Platform"
-BASE_URL = "http://103.39.67.155:8999/auth/login"
-TENANT_CODE = "6t9xpu"
+BASE_URL = os.environ.get("ORISTRAT_TEST_BASE_URL", "[TEST_BASE_URL]")
 
 REPORT_PRIMARY = "#2F6F4F"
 REPORT_ACCENT = "#5EA978"
@@ -76,9 +75,16 @@ def load_json(path, default):
 
 def sanitize(text):
     text = str(text or "")
-    text = text.replace("13043428366", "[ACCOUNT]")
-    text = text.replace("123456789", "[PASSWORD]")
-    text = text.replace("6T9XPU", "[TENANT]").replace("6t9xpu", "[TENANT]")
+    sensitive_values = [
+        (os.environ.get("ORISTRAT_TEST_ACCOUNT"), "[ACCOUNT]"),
+        (os.environ.get("ORISTRAT_TEST_PASSWORD"), "[PASSWORD]"),
+        (os.environ.get("ORISTRAT_TENANT_CODE"), "[TENANT]"),
+    ]
+    for value, replacement in sensitive_values:
+        if value:
+            text = text.replace(value, replacement)
+    text = re.sub(r"\b1[3-9]\d{9}\b", "[ACCOUNT]", text)
+    text = re.sub(r"(?i)\b(password|passwd|pwd)\b\s*[:=：]\s*[^,;\s]+", r"\1=[PASSWORD]", text)
     return re.sub(r"\s+", " ", text).strip()
 
 

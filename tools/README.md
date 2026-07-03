@@ -1,30 +1,19 @@
 # Tools
 
-自动化工具目录。
-
-当前可执行脚本仍保留在 `tools/` 根目录，以兼容现有运行方式：
+仓库级通用工具目录。这里只放多个 Skill 共用的工具；某个 Skill 专用脚本应放在对应 Skill 的 `scripts/` 目录。
 
 | 脚本 | 职责 |
 |---|---|
-| `generate_delivery_artifacts.py` | 生成三份报告和交付 zip，校验报告一致性和路径安全 |
-| `formal_load.mjs` | 正式性能压测 |
-| `big_data_special.mjs` | 大数据量专项 |
-| `create_generation_tasks.mjs` | AI 创作任务创建 |
-| `frontend_endpoint_probe.mjs` | 前端接口探测 |
-| `sensitive_info_scan.py` | 提交 GitHub 前扫描账号、密码、token、key、私钥等敏感信息 |
+| `sensitive_info_scan.py` | 提交 GitHub 前扫描账号、密码、token、key、私钥、cookie、session、本机用户路径等敏感信息 |
 
-## 目标结构
+## Skill 专用脚本
 
-后续脚本可以逐步迁移到：
+| Skill | 脚本目录 |
+|---|---|
+| `product-testing` | [../skills/product-testing/scripts/](../skills/product-testing/scripts/) |
 
-```text
-tools/
-  generate_delivery_artifacts.py
-  formal_load.mjs
-  big_data_special.mjs
-  create_generation_tasks.mjs
-  frontend_endpoint_probe.mjs
-  sensitive_info_scan.py
+提交前统一执行：
+
+```powershell
+python tools/sensitive_info_scan.py
 ```
-
-迁移前必须同步更新 `docs/workflows/03-report-generation.md` 和相关命令。
