@@ -36,7 +36,7 @@
 - [ ] 无账号密码明文。
 - [ ] 无手机号、租户码等敏感信息明文。
 - [ ] 无 Prompt、调试过程、内部临时说明。
-- [ ] 若交付内容需要提交 GitHub，已通过 [GitHub 提交安全门禁](06-github-submit-safety-gate.md)。
+- [ ] 若交付内容需要提交 GitHub，已通过仓库级 [GitHub 提交安全门禁](../../../../docs/github-submit-safety-gate.md)。
 
 ## 通过标准
 

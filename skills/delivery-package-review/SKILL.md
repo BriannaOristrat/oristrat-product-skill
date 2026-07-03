@@ -7,8 +7,8 @@ description: Use when reviewing final delivery package contents, zip archive, re
 
 Use this skill before handing over a delivery package.
 
-Follow `docs/checklists/05-final-delivery-gate.md`.
-Before any GitHub submission, also follow `docs/checklists/06-github-submit-safety-gate.md`.
+Follow `../product-testing/references/checklists/05-final-delivery-gate.md`.
+Before any GitHub submission, also follow `../../docs/github-submit-safety-gate.md`.
 
 ## Required Checks
 

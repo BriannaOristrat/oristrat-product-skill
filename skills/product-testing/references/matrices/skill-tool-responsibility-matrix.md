@@ -18,11 +18,11 @@
 
 | 工具 | 路径 | 职责 |
 |---|---|---|
-| 报告生成器 | `tools/generate_delivery_artifacts.py` | 生成三份报告和 zip，校验结论一致性和路径安全 |
-| 正式压测 | `tools/formal_load.mjs` | 运行严格/约定压测档，输出 summary/progress/failure responses |
-| 大数据专项 | `tools/big_data_special.mjs` | 临时造数、列表/搜索/统计/组织树验证、清理 |
-| AI 创作造证 | `tools/create_generation_tasks.mjs` | 创建图生图/图生视频任务并记录结果 |
-| 前端接口探测 | `tools/frontend_endpoint_probe.mjs` | 反查前端调用接口和路由 |
+| 报告生成器 | `skills/product-testing/scripts/generate_delivery_artifacts.py` | 生成三份报告和 zip，校验结论一致性和路径安全 |
+| 正式压测 | `skills/product-testing/scripts/formal_load.mjs` | 运行严格/约定压测档，输出 summary/progress/failure responses |
+| 大数据专项 | `skills/product-testing/scripts/big_data_special.mjs` | 临时造数、列表/搜索/统计/组织树验证、清理 |
+| AI 创作造证 | `skills/product-testing/scripts/create_generation_tasks.mjs` | 创建图生图/图生视频任务并记录结果 |
+| 前端接口探测 | `skills/product-testing/scripts/frontend_endpoint_probe.mjs` | 反查前端调用接口和路由 |
 | 敏感信息扫描 | `tools/sensitive_info_scan.py` | GitHub 提交前扫描账号、密码、token、key、私钥、cookie、session |
 | Poppler | `pdftoppm` | PDF 转 PNG 视觉检查 |
 | pypdf | Python package | PDF 文本层扫描 |

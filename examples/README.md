@@ -6,7 +6,8 @@
 
 ```text
 examples/
-  delivery-package/
+  product-testing/
+    delivery-package/
     README.md
 ```
 
