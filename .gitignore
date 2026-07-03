@@ -1,0 +1,37 @@
+# Runtime outputs
+output/
+tmp/
+00_入口/
+
+# Dependency folders
+node_modules/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local render and packaging artifacts
+*.log
+*.pid
+
+# Secrets and local auth material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*storage_state*.json
+*storage-state*.json
+*auth_state*.json
+*auth-state*.json
+*cookie*.json
+*session*.json
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
