@@ -6,8 +6,18 @@
 
 ## 必跑命令
 
+macOS / Linux：
+
+```bash
+python3 tools/sensitive_info_scan.py
+git status --short
+git diff --check
+```
+
+Windows PowerShell：
+
 ```powershell
-python tools/sensitive_info_scan.py
+py -3 tools/sensitive_info_scan.py
 git status --short
 git diff --check
 ```
@@ -21,7 +31,7 @@ git diff --cached --name-only
 
 ## 强检查项
 
-- [ ] `python tools/sensitive_info_scan.py` 通过。
+- [ ] `python3 tools/sensitive_info_scan.py` 或 `py -3 tools/sensitive_info_scan.py` 通过。
 - [ ] `git status --short` 中没有 `.env`、私钥、证书、storage state、cookie、session、账号导出文件。
 - [ ] `git diff --check` 无空白错误。
 - [ ] `git diff` 或 `git diff --cached` 中没有账号、密码、token、API key、租户码、手机号、cookie、session。
