@@ -12,7 +12,8 @@
 |---|---|---|---|
 | 自研 Skill | 是 | `skills/<skill-name>/` | 优先读取本仓库 `SKILL.md` 和 `references/`，按仓库门禁维护 |
 | 自研 Skill 仓库 | 视仓库职责决定 | `github/<repo-name>/` | 如果是另一个自研 Skill 仓库，只做链接或说明，不复制正文 |
-| 外部/非自研 Skill | 否 | Codex 系统、插件、社区或第三方来源 | 作为依赖调用，不把外部正文搬入本仓库 |
+| 外部/非自研 Skill | 否 | Codex 系统、插件、社区或第三方来源 | 作为依赖调用，不放入正式 `skills/`；需要安装留痕时放入 `external-skills/` |
+| 外部 Skill 缓存 | 否 | `external-skills/<source-name>/` | 只做来源追溯、方法对照和 license 记录，不直接作为自研 Skill 触发 |
 | 本地个人 Skill | 否，除非正式转自研 | 本地 Codex/Agent skills 目录 | 只记录使用边界；转自研前必须重写、脱敏、补齐 owner 和门禁 |
 | 任务临时产物 | 否 | `work/`、`outputs/`、交付证据目录 | 不登记为 Skill，只作为一次性执行证据或产物 |
 | 候选自研 Skill | 暂不放入正式 `skills/` | 需求草稿、实验目录 | 稳定复用后再建 `skills/<skill-name>/` 并登记 Catalog |
@@ -22,9 +23,10 @@
 1. 先判断任务是否属于 Oristrat 自研流程、业务规则、交付规范或团队私有方法。
 2. 如果属于，优先读取本仓库 `skills/<skill-name>/SKILL.md`。
 3. 如果是通用能力，例如 GitHub、PDF、Obsidian、浏览器、表格、文档、数据分析，优先使用当前 Codex 环境里已有的外部 Skill 或插件。
-4. 如果外部 Skill 需要叠加 Oristrat 私有规则，只创建轻量自研包装 Skill；包装 Skill 只写 Oristrat 规则和入口，不复制外部 Skill 正文。
-5. 如果只是一次性脚本、报告、截图、日志或验证产物，不纳入 `skills/`。
-6. 如果用户要求新增 Skill，先按本页分类，再决定是加入本仓库、引用外部 Skill，还是保持为临时产物。
+4. 如果外部 Skill 需要叠加 Oristrat 私有规则，只创建轻量自研包装 Skill；包装 Skill 只写 Oristrat 规则和入口。
+5. 如果用户明确要求安装外部 Skill，缓存到 `external-skills/`，再由自研包装 Skill 记录来源和使用边界。
+6. 如果只是一次性脚本、报告、截图、日志或验证产物，不纳入 `skills/`。
+7. 如果用户要求新增 Skill，先按本页分类，再决定是加入本仓库、引用外部 Skill，还是保持为临时产物。
 
 ## 自研 Skill 入库标准
 
@@ -38,7 +40,7 @@
 ## 不入库标准
 
 - 只是 Codex 系统能力或插件能力。
-- 只是第三方 Skill 的原文、教程或安装缓存。
+- 只是第三方 Skill 的原文、教程或安装缓存；这类内容只能作为 `external-skills/` 来源缓存，不进入正式 `skills/`。
 - 只是某次任务的临时脚本、日志、截图或交付结果。
 - 只服务个人本地偏好，尚未成为团队规范。
 - 无法脱敏或版权/来源不清。

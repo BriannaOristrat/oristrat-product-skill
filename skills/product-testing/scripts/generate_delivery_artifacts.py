@@ -27,8 +27,21 @@ from reportlab.platypus import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_REPORT_DIR = REPO_ROOT.parent.parent / "04_交付报告"
+SCRIPT_PATH = Path(__file__).resolve()
+SELF_DEVELOPED_SKILL_ROOT = SCRIPT_PATH.parents[3]
+LOCAL_ARCHIVE_REPORT_ROOT = Path(r"D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告")
+FALLBACK_ARCHIVE_REPORT_ROOT = SELF_DEVELOPED_SKILL_ROOT / "输出" / "报告"
+DEFAULT_REPORT_FOLDER_NAME = "04_交付报告"
+
+
+def choose_default_archive_report_root():
+    if LOCAL_ARCHIVE_REPORT_ROOT.exists() or LOCAL_ARCHIVE_REPORT_ROOT.parent.exists():
+        return LOCAL_ARCHIVE_REPORT_ROOT
+    return FALLBACK_ARCHIVE_REPORT_ROOT
+
+
+DEFAULT_ARCHIVE_REPORT_ROOT = choose_default_archive_report_root()
+DEFAULT_REPORT_DIR = DEFAULT_ARCHIVE_REPORT_ROOT / DEFAULT_REPORT_FOLDER_NAME
 REPORT_DIR = Path(os.environ.get("ORISTRAT_REPORT_DIR", DEFAULT_REPORT_DIR)).expanduser()
 EVIDENCE_DIR = REPORT_DIR / "evidence"
 SCREENSHOT_DIR = EVIDENCE_DIR / "screenshots"
@@ -43,15 +56,18 @@ DATE_TEXT = "2026-07-02"
 PROJECT_NAME = "Oristrat AI Platform"
 BASE_URL = os.environ.get("ORISTRAT_TEST_BASE_URL", "[TEST_BASE_URL]")
 
-REPORT_PRIMARY = "#2F6F4F"
-REPORT_ACCENT = "#5EA978"
-REPORT_TABLE_HEADER = "#CBE5D3"
-REPORT_TABLE_HEADER_TEXT = "#123D2B"
-REPORT_BORDER = "#B8D6C1"
-REPORT_ROW = "#F5FBF7"
-REPORT_HIGHLIGHT = "#E9F5ED"
-REPORT_TEXT = "#1F2933"
-REPORT_TITLE = "#0F2F24"
+# Muted green palette aligned with the approved formal pressure-test visual.
+REPORT_PRIMARY = "#2F6B4F"
+REPORT_ACCENT = "#6FAF8B"
+REPORT_TABLE_HEADER = "#C8E0D0"
+REPORT_TABLE_HEADER_TEXT = "#0B3D2E"
+REPORT_BORDER = "#B7D6C3"
+REPORT_ROW = "#F1F7F3"
+REPORT_HIGHLIGHT = "#E8F3EC"
+REPORT_CARD_BG = "#F4FAF6"
+REPORT_TEXT = "#29323D"
+REPORT_MUTED = "#65746E"
+REPORT_TITLE = "#0B3D2E"
 
 
 def load_json(path, default):
@@ -142,15 +158,19 @@ def image_src_for_html(target):
     return report_relative_path(target) if Path(target).is_absolute() else str(target).replace("\\", "/")
 
 
-def assert_no_local_paths_in_actual_report(markdown, html):
+def assert_no_local_paths_in_report(report_name, markdown, html):
     for label, content in (("Markdown", markdown), ("HTML", html)):
         match = LOCAL_PATH_PATTERN.search(content)
         if match:
             excerpt = content[max(0, match.start() - 40):match.end() + 80]
             raise RuntimeError(
-                "02_实际交付报告不得包含本地绝对路径或 file:// 引用，"
+                f"{report_name} 不得包含本地绝对路径或 file:// 引用，"
                 f"{label} 中发现：{excerpt}"
             )
+
+
+def assert_no_local_paths_in_actual_report(markdown, html):
+    assert_no_local_paths_in_report("02_实际交付报告", markdown, html)
 
 
 def pdf_safe(text):
@@ -168,6 +188,8 @@ def parse_md_to_html(title, markdown):
       --report-border: {REPORT_BORDER};
       --report-row: {REPORT_ROW};
       --report-highlight: {REPORT_HIGHLIGHT};
+      --report-card: {REPORT_CARD_BG};
+      --report-muted: {REPORT_MUTED};
       --report-text: {REPORT_TEXT};
     }}
     body {{
@@ -658,10 +680,10 @@ def ensure_perf_failure_screenshot(formal):
     for idx, (label, value, note) in enumerate(cards):
         x0 = margin + idx * (card_w + gap)
         x1 = x0 + card_w
-        draw.rounded_rectangle([x0, card_top, x1, card_top + card_h], radius=12, fill="#F5FBF7", outline=border, width=2)
+        draw.rounded_rectangle([x0, card_top, x1, card_top + card_h], radius=12, fill=REPORT_CARD_BG, outline=border, width=2)
         draw.text((x0 + 22, card_top + 18), label, fill=primary, font=card_label_font)
         draw_text_fit(draw, (x0 + 22, card_top + 50), value, card_value_font, title_color, card_w - 44)
-        draw_text_fit(draw, (x0 + 22, card_top + 92), note, small_font, "#52645B", card_w - 44)
+        draw_text_fit(draw, (x0 + 22, card_top + 92), note, small_font, REPORT_MUTED, card_w - 44)
 
     table_x = margin
     table_y = 282
@@ -702,11 +724,14 @@ def ensure_perf_failure_screenshot(formal):
     footer_y = table_y + header_h + row_h * len(rows) + 36
     error_rate = float(totals.get("errorRate") or 0)
     threshold = float((formal.get("thresholds") or {}).get("errorRateThreshold") or 0.001)
+    p95 = int(latency.get("p95Ms") or 0)
+    p95_threshold = int((formal.get("thresholds") or {}).get("p95ThresholdMs") or 2000)
     comparison = "<=" if error_rate <= threshold else ">"
-    verdict = "通过" if error_rate <= threshold and int(latency.get("p95Ms") or 0) <= int((formal.get("thresholds") or {}).get("p95ThresholdMs") or 2000) else "未通过"
+    p95_relation = "满足" if p95 <= p95_threshold else "超过"
+    verdict = "通过" if error_rate <= threshold and p95 <= p95_threshold else "未通过"
     footer = (
         f"判定：错误率 {fmt_pct(totals.get('errorRate'))} {comparison} {fmt_pct(threshold)}，正式性能压测{verdict}；"
-        f"P95 {fmt_num(latency.get('p95Ms'))}ms 满足响应阈值，失败样本用于排查偶发请求失败。"
+        f"P95 {fmt_num(latency.get('p95Ms'))}ms {p95_relation}响应阈值，失败样本用于排查偶发请求失败。"
     )
     draw.rounded_rectangle([margin, footer_y, width - margin, footer_y + 78], radius=10, fill=REPORT_HIGHLIGHT, outline=border, width=2)
     draw_text_fit(draw, (margin + 22, footer_y + 25), footer, body_font, title_color, width - margin * 2 - 44)
@@ -878,8 +903,18 @@ def build_evidence_report(data):
             md_table(["判定项", "验收阈值", "实测值", "结论", "说明"], perf_failure_basis_rows(formal)),
             "### 5.2 分接口/场景失败分布",
             md_table(["场景", "请求数", "失败数", "错误率", "P95", "P99", "最大响应"], perf_scenario_rows(formal)),
-            f"![正式压测关键失败分布截图]({perf_screenshot})" if perf_screenshot else "正式压测关键失败分布截图未生成。",
-            "### 5.3 失败响应证据与处理建议",
+            f"![正式压测关键失败分布截图]({report_relative_path(perf_screenshot)})" if perf_screenshot else "正式压测关键失败分布截图未生成。",
+            "### 5.3 02 异常数据对应关系",
+            md_table(
+                ["02 异常 / 观察项", "01 对应证据", "反查位置", "处理口径"],
+                [
+                    ["正式性能压测失败响应", failure_response_summary(failure_responses), report_relative_path(FORMAL_FAILURE_RESPONSES), "02 中只展示客户可读摘要；01 必须保留失败样本明细。"],
+                    ["正式压测关键失败分布", "根据本次 formal_load_summary.json 的 totals、latency、scenarioStats 生成。", report_relative_path(PERF_FAILURE_SCREENSHOT), "02 中展示分布图；01 同步保留场景表和图片证据。"],
+                    ["性能验收判定", perf_summary_text(formal), report_relative_path(FORMAL_DIR / "formal_load_summary.json"), "02 的通过/不通过/观察项结论必须与该证据一致。"],
+                    ["大数据量专项异常", big_data_summary_text(big_data), report_relative_path(LOG_DIR / "big_data_special.json"), "02 若出现部分通过或未完成，01 必须能反查造数、验证和清理记录。"],
+                ],
+            ),
+            "### 5.4 失败响应证据与处理建议",
             md_table(
                 ["项目", "内容"],
                 [
@@ -891,20 +926,20 @@ def build_evidence_report(data):
                     ["处理建议", "排查偶发 HTTP 502 和 request_exception_no_response；如需证明已完全消除偶发失败，按同档位重新执行：100 VU、2 小时、300 秒升压、300 秒降压、P95 <= 2000ms、错误率 <= 0.1%。"],
                 ],
             ),
-            "### 5.4 失败响应样本",
+            "### 5.5 失败响应样本",
             md_table(["场景", "方法", "接口", "HTTP 状态", "失败类型", "Content-Type", "响应 / 异常摘要"], failure_response_rows(failure_responses)),
             "## 6. 反查文件",
             md_table(
                 ["类别", "文件"],
                 [
-                    ["页面观测 JSON", str(LOG_DIR / "page_observations.json")],
-                    ["补充检查 JSON", str(LOG_DIR / "extra_checks.json")],
-                    ["正式压测结果", str(FORMAL_DIR / "formal_load_summary.json")],
-                    ["正式压测进度", str(FORMAL_DIR / "formal_load_progress.json")],
-                    ["认证检查", str(FORMAL_DIR / "formal_load_auth_check.json")],
-                    ["正式压测关键截图", str(PERF_FAILURE_SCREENSHOT)],
-                    ["正式压测失败响应", str(FORMAL_FAILURE_RESPONSES)],
-                    ["大数据专项造数/清理证据", str(LOG_DIR / "big_data_special.json")],
+                    ["页面观测 JSON", report_relative_path(LOG_DIR / "page_observations.json")],
+                    ["补充检查 JSON", report_relative_path(LOG_DIR / "extra_checks.json")],
+                    ["正式压测结果", report_relative_path(FORMAL_DIR / "formal_load_summary.json")],
+                    ["正式压测进度", report_relative_path(FORMAL_DIR / "formal_load_progress.json")],
+                    ["认证检查", report_relative_path(FORMAL_DIR / "formal_load_auth_check.json")],
+                    ["正式压测关键截图", report_relative_path(PERF_FAILURE_SCREENSHOT)],
+                    ["正式压测失败响应", report_relative_path(FORMAL_FAILURE_RESPONSES)],
+                    ["大数据专项造数/清理证据", report_relative_path(LOG_DIR / "big_data_special.json")],
                 ],
             ),
         ]
@@ -1056,7 +1091,11 @@ def build_actual_report(data):
                     ["性能结论边界", "认证后只读接口组合，单管理员账号会话", "覆盖后台主要只读链路，不覆盖多账号隔离和写入任务生成", "已说明"],
                 ],
             ),
-            f"![正式压测关键失败分布截图]({report_relative_path(perf_screenshot)})" if perf_screenshot else "正式压测关键失败分布截图未生成。",
+            "#### 3.3.1 正式压测关键失败分布",
+            "下图由本次正式压测证据自动生成，用于定位失败集中场景、错误率和慢响应峰值；没有实际压测数据时不得使用示例图或示例数值替代。",
+            f"![正式压测关键失败分布截图]({report_relative_path(perf_screenshot)})" if perf_screenshot else "正式压测关键失败分布截图未生成，需补齐实际压测证据后重新生成。",
+            "#### 3.3.2 分场景失败分布明细",
+            md_table(["场景", "请求数", "失败数", "错误率", "P95", "P99", "最大响应"], perf_scenario_rows(formal)),
             "### 3.4 关键场景性能测试",
             md_table(
                 ["场景编号", "关键场景名称", "用户数 / 样本数", "持续时间", "预期结果", "实际结果", "结论"],
@@ -1094,8 +1133,9 @@ def validate_cross_report_consistency(data, docs):
         required = [
             "### 5.1 验收判定依据",
             "### 5.2 分接口/场景失败分布",
-            "### 5.3 失败响应证据与处理建议",
-            "### 5.4 失败响应样本",
+            "### 5.3 02 异常数据对应关系",
+            "### 5.4 失败响应证据与处理建议",
+            "### 5.5 失败响应样本",
             "错误率",
             "P95",
             "正式压测关键失败分布截图",
@@ -1118,7 +1158,8 @@ def validate_cross_report_consistency(data, docs):
             )
     if has_failed_requests:
         required = [
-            "### 5.4 失败响应样本",
+            "### 5.3 02 异常数据对应关系",
+            "### 5.5 失败响应样本",
             "formal_load_failure_responses.json",
             "HTTP 状态",
             "响应 / 异常摘要",
@@ -1151,6 +1192,7 @@ def write_artifacts():
         pdf_path = REPORT_DIR / f"{name}.pdf"
         html_title = "测试报告" if name == "02_实际交付报告" else name
         html = parse_md_to_html(html_title, markdown)
+        assert_no_local_paths_in_report(name, markdown, html)
         if name == "02_实际交付报告":
             assert_no_local_paths_in_actual_report(markdown, html)
         md_path.write_text(markdown, encoding="utf-8")

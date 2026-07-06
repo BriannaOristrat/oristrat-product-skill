@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Design Management"
+  short_description: "Requirements analysis, PRD, roadmap, user stories, PM handoff"
+  default_prompt: "Use $product-design-management to turn this product idea into requirements analysis, a clear PRD, design workflow, and delivery plan."

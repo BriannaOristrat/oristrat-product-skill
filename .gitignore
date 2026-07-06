@@ -6,6 +6,9 @@ tmp/
 # Dependency folders
 node_modules/
 
+# Local external skill research cache
+external-skills/
+
 # Python caches
 __pycache__/
 *.py[cod]

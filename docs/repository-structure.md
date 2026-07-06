@@ -14,6 +14,7 @@
 | `tools/` | 跨 Skill 的通用工具 |
 | `assets/` | 跨 Skill 共用静态资源 |
 | `examples/` | 跨 Skill 示例，不放真实敏感数据 |
+| `external-skills/` | 第三方 Skill 来源缓存，只用于调研、对照和追溯，不作为正式自研入口 |
 
 ## 单个 Skill 标准结构
 
@@ -31,7 +32,8 @@ skills/<skill-name>/
 - 一个自研 Skill 自己的脚本放入 `skills/<skill-name>/scripts/`。
 - 多个 Skill 共用的规则放入根目录 `docs/`。
 - 多个 Skill 共用的脚本放入根目录 `tools/`。
-- 外部 Skill、系统 Skill、插件 Skill、本地个人 Skill 和任务临时产物不复制进本仓库。
+- 外部 Skill、系统 Skill、插件 Skill、本地个人 Skill 和任务临时产物不放入正式 `skills/`。
+- 用户明确要求安装外部 Skill 作为调研来源时，只放入 `external-skills/`，并在自研 Skill 中通过来源映射使用。
 - 新增 Skill 前先执行 [Skill 来源治理与 AI 路由规则](skill-source-governance.md)。
 - Obsidian 直接读取本仓库，不额外复制文档。
 - GitHub 提交前统一执行 [GitHub 提交安全门禁](github-submit-safety-gate.md)。
