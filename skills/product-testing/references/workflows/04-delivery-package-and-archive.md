@@ -6,9 +6,9 @@
 
 ## 归档根目录
 
-默认归档根目录：`D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告`。
+默认归档根目录由本机环境变量 `ORISTRAT_REPORT_ARCHIVE_ROOT` 指定。
 
-如果该本地归档根不可用，回退到 `自研skill\输出\报告`。最终报告文件夹和 zip 必须位于归档根目录下；不得默认交付到当前 C 盘工作区。
+仓库中不得写入个人机器的绝对路径。本机可把 `ORISTRAT_REPORT_ARCHIVE_ROOT` 写入被忽略的 `自研skill\.env.local` 或 `skills/product-testing/.env.local`，报告脚本会自动加载；线上仓库和其他机器自行配置。如果该本地归档根不可用，回退到 `自研skill\输出\报告`。最终报告文件夹和 zip 必须位于归档根目录下；不得默认交付到当前工作区。
 
 ## 标准目录
 

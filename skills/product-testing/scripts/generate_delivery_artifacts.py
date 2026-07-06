@@ -28,15 +28,64 @@ from reportlab.platypus import (
 
 
 SCRIPT_PATH = Path(__file__).resolve()
+PRODUCT_TESTING_SKILL_ROOT = SCRIPT_PATH.parents[1]
 SELF_DEVELOPED_SKILL_ROOT = SCRIPT_PATH.parents[3]
-LOCAL_ARCHIVE_REPORT_ROOT = Path(r"D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告")
 FALLBACK_ARCHIVE_REPORT_ROOT = SELF_DEVELOPED_SKILL_ROOT / "输出" / "报告"
 DEFAULT_REPORT_FOLDER_NAME = "04_交付报告"
+LOCAL_ENV_KEYS = {
+    "ORISTRAT_REPORT_ARCHIVE_ROOT",
+    "ORISTRAT_REPORT_ROOT",
+    "ORISTRAT_REPORT_DIR",
+}
+
+
+def parse_local_env_value(value):
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        return value[1:-1]
+    return value
+
+
+def local_env_paths():
+    configured = os.environ.get("ORISTRAT_PRODUCT_TESTING_LOCAL_ENV_FILES")
+    if configured:
+        return [Path(item).expanduser() for item in configured.split(os.pathsep) if item.strip()]
+    return [
+        SELF_DEVELOPED_SKILL_ROOT / ".env.local",
+        PRODUCT_TESTING_SKILL_ROOT / ".env.local",
+    ]
+
+
+def load_local_environment():
+    local_values = {}
+    for env_path in local_env_paths():
+        try:
+            lines = env_path.read_text(encoding="utf-8-sig").splitlines()
+        except OSError:
+            continue
+        for raw_line in lines:
+            line = raw_line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.startswith("export "):
+                line = line[7:].strip()
+            if "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            if key in LOCAL_ENV_KEYS:
+                local_values[key] = parse_local_env_value(value)
+    for key, value in local_values.items():
+        os.environ.setdefault(key, value)
+
+
+load_local_environment()
 
 
 def choose_default_archive_report_root():
-    if LOCAL_ARCHIVE_REPORT_ROOT.exists() or LOCAL_ARCHIVE_REPORT_ROOT.parent.exists():
-        return LOCAL_ARCHIVE_REPORT_ROOT
+    configured = os.environ.get("ORISTRAT_REPORT_ARCHIVE_ROOT") or os.environ.get("ORISTRAT_REPORT_ROOT")
+    if configured:
+        return Path(configured).expanduser()
     return FALLBACK_ARCHIVE_REPORT_ROOT
 
 
@@ -48,9 +97,6 @@ def resolve_report_dir():
     configured = os.environ.get("ORISTRAT_REPORT_DIR")
     if configured:
         return Path(configured).expanduser()
-    legacy_root = os.environ.get("ORISTRAT_REPORT_ROOT")
-    if legacy_root:
-        return Path(legacy_root).expanduser() / "00_入口" / "01_产物" / "04_交付报告"
     return DEFAULT_REPORT_DIR
 
 

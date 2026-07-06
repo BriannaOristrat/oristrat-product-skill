@@ -22,10 +22,12 @@ Use this skill when a task asks for product testing, acceptance testing, deliver
 
 ## Default Delivery Location
 
-For OB testing, the final report folder and zip must be archived under `D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告` by default.
+For OB testing, the final report folder and zip must be archived under the local archive root configured by `ORISTRAT_REPORT_ARCHIVE_ROOT` by default.
 
-- If that local archive root is unavailable, use the self-developed skill root fallback: `自研skill\输出\报告`.
-- Do not use the current C drive workspace as the final delivery location unless the user explicitly asks for it.
+- Keep local absolute paths out of tracked repository files. Configure machine-specific archive roots in the local shell, OS user environment, or ignored `.env.*` files.
+- The report script auto-loads ignored local config files from `自研skill\.env.local` and `skills/product-testing/.env.local`; explicit shell or OS environment variables still take priority.
+- If `ORISTRAT_REPORT_ARCHIVE_ROOT` is unavailable, use the self-developed skill root fallback: `自研skill\输出\报告`.
+- Do not use the current workspace as the final delivery location unless the user explicitly asks for it.
 - When a task has a project or customer slug, set `ORISTRAT_REPORT_DIR` to a child folder under the archive root; the zip is generated next to that child folder.
 
 ## Required Gates

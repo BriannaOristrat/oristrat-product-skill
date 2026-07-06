@@ -45,21 +45,29 @@ py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
 - 若实际压测证据缺失或字段不足，不得伪造图片和指标；报告应标记为未生成/待补证据，并要求补齐正式压测后重新生成。
 - `01_运行过程证据报告` 必须保留 `02` 中异常、观察项、不通过项的明细证据，包括失败响应样本、关键失败分布图、源 JSON 和必要的错误截图。
 
-默认归档根目录固定为 `D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告`。如果该本地归档根不可用，则回退到 `自研skill\输出\报告`，不得默认落到当前 C 盘工作区。
+默认归档根目录由本机环境变量 `ORISTRAT_REPORT_ARCHIVE_ROOT` 指定。仓库中不得写入个人机器的绝对路径；如果未配置本机归档根目录，则回退到 `自研skill\输出\报告`，不得默认落到当前工作区。
+
+报告脚本会自动读取被 `.gitignore` 忽略的本地配置文件：`自研skill\.env.local` 和 `skills/product-testing/.env.local`。首次在本机配置后，后续使用该 skill 生成报告会自动加载；线上仓库或其他机器仍需自行配置。示例：
+
+```dotenv
+ORISTRAT_REPORT_ARCHIVE_ROOT=<本机报告归档根目录>
+```
 
 报告生成脚本的 `REPORT_DIR` 是单次交付报告文件夹；最终 zip 会生成在 `REPORT_DIR` 的父目录。执行 OB 测试时，应优先把 `REPORT_DIR` 设置为归档根目录下的任务子目录，例如 `...\输出\报告\ob-项目名-日期-acceptance`。
 
-如需指定单次交付目录，可设置 `ORISTRAT_REPORT_DIR`。若需兼容旧脚本入口，可设置 `ORISTRAT_REPORT_ROOT`，脚本会追加 `00_入口\01_产物\04_交付报告`。若系统无法自动找到中文字体，可设置 `ORISTRAT_CJK_FONT` 或 `ORISTRAT_CJK_FONT_BOLD` 指向本机字体文件。
+如需指定单次交付目录，可设置 `ORISTRAT_REPORT_DIR`。如需指定默认归档根目录，可设置 `ORISTRAT_REPORT_ARCHIVE_ROOT`；`ORISTRAT_REPORT_ROOT` 仅作为旧入口别名保留，语义同归档根目录。若系统无法自动找到中文字体，可设置 `ORISTRAT_CJK_FONT` 或 `ORISTRAT_CJK_FONT_BOLD` 指向本机字体文件。
 
 macOS / Linux：
 
 ```bash
+export ORISTRAT_REPORT_ARCHIVE_ROOT="<本机报告归档根目录>"
 ORISTRAT_REPORT_DIR="<交付报告目录>" python3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 Windows PowerShell：
 
 ```powershell
+$env:ORISTRAT_REPORT_ARCHIVE_ROOT="<本机报告归档根目录>"
 $env:ORISTRAT_REPORT_DIR="<交付报告目录>"
 py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```

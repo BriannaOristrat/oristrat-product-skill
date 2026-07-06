@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import os
 import sys
+import tempfile
 import types
 import unittest
 from pathlib import Path
@@ -123,9 +124,18 @@ def _load_script(env):
     sys.modules.pop(module_name, None)
     spec = importlib.util.spec_from_file_location(module_name, SCRIPT_PATH)
     module = importlib.util.module_from_spec(spec)
-    with _install_dependency_stubs(), patch.dict(os.environ, env, clear=False):
-        for key in ("ORISTRAT_REPORT_DIR", "ORISTRAT_REPORT_ROOT"):
-            if key not in env:
+    effective_env = {
+        "ORISTRAT_PRODUCT_TESTING_LOCAL_ENV_FILES": str(REPO_ROOT / "tmp" / "missing-local-env"),
+    }
+    effective_env.update(env)
+    with _install_dependency_stubs(), patch.dict(os.environ, effective_env, clear=False):
+        for key in (
+            "ORISTRAT_REPORT_DIR",
+            "ORISTRAT_REPORT_ARCHIVE_ROOT",
+            "ORISTRAT_REPORT_ROOT",
+            "ORISTRAT_PRODUCT_TESTING_LOCAL_ENV_FILES",
+        ):
+            if key not in effective_env:
                 os.environ.pop(key, None)
         assert spec.loader is not None
         spec.loader.exec_module(module)
@@ -133,12 +143,37 @@ def _load_script(env):
 
 
 class GenerateDeliveryArtifactsCrossPlatformTest(unittest.TestCase):
-    def test_default_report_dir_uses_archive_output_layout(self):
+    def test_default_report_dir_uses_fallback_archive_output_layout(self):
         module = _load_script({})
 
         self.assertEqual(
             module.REPORT_DIR,
-            Path(r"D:\AAAA\资料归档\codex_files\00_入口\01_产物\输出\报告") / "04_交付报告",
+            module.SELF_DEVELOPED_SKILL_ROOT / "输出" / "报告" / "04_交付报告",
+        )
+
+    def test_default_report_dir_can_use_local_archive_root_environment_variable(self):
+        archive_root = REPO_ROOT / "tmp" / "local-archive-root"
+        module = _load_script({"ORISTRAT_REPORT_ARCHIVE_ROOT": str(archive_root)})
+
+        self.assertEqual(
+            module.REPORT_DIR,
+            archive_root / "04_交付报告",
+        )
+
+    def test_default_report_dir_can_use_ignored_local_env_file(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            archive_root = Path(tmpdir) / "local-archive-root"
+            env_file = Path(tmpdir) / ".env.local"
+            env_file.write_text(
+                f"ORISTRAT_REPORT_ARCHIVE_ROOT={archive_root}\n",
+                encoding="utf-8",
+            )
+
+            module = _load_script({"ORISTRAT_PRODUCT_TESTING_LOCAL_ENV_FILES": str(env_file)})
+
+        self.assertEqual(
+            module.REPORT_DIR,
+            archive_root / "04_交付报告",
         )
 
     def test_report_dir_can_be_overridden_with_environment_variable(self):
@@ -147,13 +182,13 @@ class GenerateDeliveryArtifactsCrossPlatformTest(unittest.TestCase):
 
         self.assertEqual(module.REPORT_DIR, custom_report_dir)
 
-    def test_report_root_legacy_environment_variable_is_supported(self):
+    def test_report_root_legacy_environment_variable_is_archive_root_alias(self):
         custom_report_root = REPO_ROOT / "tmp" / "legacy-report-root"
         module = _load_script({"ORISTRAT_REPORT_ROOT": str(custom_report_root)})
 
         self.assertEqual(
             module.REPORT_DIR,
-            custom_report_root / "00_入口" / "01_产物" / "04_交付报告",
+            custom_report_root / "04_交付报告",
         )
 
     def test_pdf_table_uses_resolved_font_name_when_cjk_font_is_unavailable(self):
