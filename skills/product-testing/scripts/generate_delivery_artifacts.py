@@ -29,7 +29,19 @@ from reportlab.platypus import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_REPORT_DIR = REPO_ROOT.parent.parent / "04_交付报告"
-REPORT_DIR = Path(os.environ.get("ORISTRAT_REPORT_DIR", DEFAULT_REPORT_DIR)).expanduser()
+
+
+def resolve_report_dir():
+    configured = os.environ.get("ORISTRAT_REPORT_DIR")
+    if configured:
+        return Path(configured).expanduser()
+    legacy_root = os.environ.get("ORISTRAT_REPORT_ROOT")
+    if legacy_root:
+        return Path(legacy_root).expanduser() / "00_入口" / "01_产物" / "04_交付报告"
+    return DEFAULT_REPORT_DIR
+
+
+REPORT_DIR = resolve_report_dir()
 EVIDENCE_DIR = REPORT_DIR / "evidence"
 SCREENSHOT_DIR = EVIDENCE_DIR / "screenshots"
 LOG_DIR = EVIDENCE_DIR / "playwright_logs"
@@ -255,13 +267,48 @@ def parse_md_to_html(title, markdown):
     return "\n".join(html_lines)
 
 
+def cjk_font_candidates(bold=False):
+    configured = os.environ.get("ORISTRAT_CJK_FONT_BOLD" if bold else "ORISTRAT_CJK_FONT")
+    if configured:
+        yield Path(configured).expanduser()
+    if bold:
+        yield Path(r"C:\Windows\Fonts\msyhbd.ttc")
+    yield from [
+        Path(r"C:\Windows\Fonts\msyh.ttc"),
+        Path(r"C:\Windows\Fonts\simhei.ttf"),
+        Path(r"C:\Windows\Fonts\simsun.ttc"),
+        Path("/System/Library/Fonts/PingFang.ttc"),
+        Path("/System/Library/Fonts/Hiragino Sans GB.ttc"),
+        Path("/System/Library/Fonts/Supplemental/Songti.ttc"),
+        Path("/System/Library/Fonts/Supplemental/Arial Unicode.ttf"),
+        Path("/Library/Fonts/Arial Unicode.ttf"),
+        Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+        Path("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
+        Path("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"),
+    ]
+
+
+def find_cjk_font_path(bold=False):
+    for font_path in cjk_font_candidates(bold):
+        if font_path.exists():
+            return font_path
+    return None
+
+
+def register_pdf_font():
+    for font_path in cjk_font_candidates():
+        if not font_path.exists():
+            continue
+        try:
+            pdfmetrics.registerFont(TTFont("ReportCJK", str(font_path)))
+            return "ReportCJK"
+        except Exception:
+            continue
+    return "Helvetica"
+
+
 def setup_pdf_styles():
-    font_path = Path(r"C:\Windows\Fonts\simhei.ttf")
-    if font_path.exists():
-        pdfmetrics.registerFont(TTFont("ReportCJK", str(font_path)))
-        font_name = "ReportCJK"
-    else:
-        font_name = "Helvetica"
+    font_name = register_pdf_font()
 
     styles = getSampleStyleSheet()
     styles.add(
@@ -315,6 +362,9 @@ def setup_pdf_styles():
 
 
 def table_for_pdf(headers, rows, styles, widths=None):
+    body_font_name = getattr(styles["ReportBody"], "fontName", None)
+    if body_font_name is None:
+        body_font_name = getattr(styles["ReportBody"], "kwargs", {}).get("fontName", "Helvetica")
     data = [[Paragraph(pdf_safe(h), styles["ReportBody"]) for h in headers]]
     for row in rows:
         data.append([Paragraph(pdf_safe(cell), styles["ReportBody"]) for cell in row])
@@ -324,7 +374,7 @@ def table_for_pdf(headers, rows, styles, widths=None):
             [
                 ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor(REPORT_TABLE_HEADER)),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.HexColor(REPORT_TABLE_HEADER_TEXT)),
-                ("FONTNAME", (0, 0), (-1, -1), "ReportCJK"),
+                ("FONTNAME", (0, 0), (-1, -1), body_font_name),
                 ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor(REPORT_BORDER)),
                 ("VALIGN", (0, 0), (-1, -1), "TOP"),
                 ("BACKGROUND", (0, 1), (-1, -1), colors.white),
@@ -579,14 +629,13 @@ def failure_response_summary(samples):
 
 
 def load_image_font(size, bold=False):
-    candidates = [
-        r"C:\Windows\Fonts\msyhbd.ttc" if bold else r"C:\Windows\Fonts\msyh.ttc",
-        r"C:\Windows\Fonts\simhei.ttf",
-        r"C:\Windows\Fonts\simsun.ttc",
-    ]
-    for font_path in candidates:
-        if font_path and Path(font_path).exists():
-            return ImageFont.truetype(font_path, size=size)
+    for font_path in cjk_font_candidates(bold=bold):
+        if not font_path.exists():
+            continue
+        try:
+            return ImageFont.truetype(str(font_path), size=size)
+        except Exception:
+            continue
     return ImageFont.load_default()
 
 
