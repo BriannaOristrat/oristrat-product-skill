@@ -14,8 +14,18 @@
 
 ## 默认工具
 
+macOS / Linux：
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 skills/product-testing/scripts/generate_delivery_artifacts.py
+```
+
+Windows PowerShell：
+
 ```powershell
-python skills/product-testing/scripts/generate_delivery_artifacts.py
+py -3 -m pip install -r requirements.txt
+py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 该工具负责：
@@ -39,11 +49,19 @@ python skills/product-testing/scripts/generate_delivery_artifacts.py
 
 报告生成脚本的 `REPORT_DIR` 是单次交付报告文件夹；最终 zip 会生成在 `REPORT_DIR` 的父目录。执行 OB 测试时，应优先把 `REPORT_DIR` 设置为归档根目录下的任务子目录，例如 `...\输出\报告\ob-项目名-日期-acceptance`。
 
-如需指定单次交付目录，设置：
+如需指定单次交付目录，可设置 `ORISTRAT_REPORT_DIR`。若需兼容旧脚本入口，可设置 `ORISTRAT_REPORT_ROOT`，脚本会追加 `00_入口\01_产物\04_交付报告`。若系统无法自动找到中文字体，可设置 `ORISTRAT_CJK_FONT` 或 `ORISTRAT_CJK_FONT_BOLD` 指向本机字体文件。
+
+macOS / Linux：
+
+```bash
+ORISTRAT_REPORT_DIR="<交付报告目录>" python3 skills/product-testing/scripts/generate_delivery_artifacts.py
+```
+
+Windows PowerShell：
 
 ```powershell
 $env:ORISTRAT_REPORT_DIR="<交付报告目录>"
-python skills/product-testing/scripts/generate_delivery_artifacts.py
+py -3 skills/product-testing/scripts/generate_delivery_artifacts.py
 ```
 
 ## 报告标题规则
