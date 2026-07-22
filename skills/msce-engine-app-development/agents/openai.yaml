@@ -1,0 +1,4 @@
+interface:
+  display_name: "MSCE 应用开发与审查"
+  short_description: "总控按需调用的 MSCE 开发与严格门禁底座"
+  default_prompt: "Use $msce-engine-app-development as a foundation capability to follow the current MSCE Harness, implement the smallest coherent change, and produce a strict submission-gate result before Git plus a matching staged audit."

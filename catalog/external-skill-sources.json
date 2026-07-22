@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "name": "addyosmani-agent-skills",
+      "repository": "https://github.com/addyosmani/agent-skills",
+      "localDirectory": "external-skills/addyosmani-agent-skills",
+      "category": "Agent 工程",
+      "purpose": "通用 Agent 工程方法与实现参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "am-will-codex-skills",
+      "repository": "https://github.com/am-will/codex-skills",
+      "localDirectory": "external-skills/am-will-codex-skills",
+      "category": "决策协作",
+      "purpose": "llm-council 独立方案与匿名评审参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "borghei-claude-skills",
+      "repository": "https://github.com/borghei/Claude-Skills",
+      "localDirectory": "external-skills/borghei-claude-skills",
+      "category": "产品设计",
+      "purpose": "产品设计师与 spec-to-repo 方法参考",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "deanpeters-product-manager-skills",
+      "repository": "https://github.com/deanpeters/Product-Manager-Skills",
+      "localDirectory": "external-skills/deanpeters-product-manager-skills",
+      "category": "产品管理",
+      "purpose": "PRD、用户故事、路线图与优先级方法参考",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "digidai-product-manager-skills",
+      "repository": "https://github.com/Digidai/product-manager-skills",
+      "localDirectory": "external-skills/digidai-product-manager-skills",
+      "category": "产品管理",
+      "purpose": "SaaS PM 日常诊断与路线图方法参考",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "dsifry-metaswarm",
+      "repository": "https://github.com/dsifry/metaswarm",
+      "localDirectory": "external-skills/dsifry-metaswarm",
+      "category": "验证评审",
+      "purpose": "独立验证、对抗评审和质量门禁参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "ercoledevs-codex-council",
+      "repository": "https://github.com/ercoledevs/codex-council",
+      "localDirectory": "external-skills/ercoledevs-codex-council",
+      "category": "决策协作",
+      "purpose": "Codex 原生候选方案与匿名评审参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "erickong-agent-roundtable",
+      "repository": "https://github.com/erickong/agent-roundtable",
+      "localDirectory": "external-skills/erickong-agent-roundtable",
+      "category": "决策协作",
+      "purpose": "多轮专家辩论与独立主持人机制参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "jeffallan-claude-skills",
+      "repository": "https://github.com/jeffallan/claude-skills",
+      "localDirectory": "external-skills/jeffallan-claude-skills",
+      "category": "Skill 工程",
+      "purpose": "通用 Claude Skill 结构与方法参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "nextlevelbuilder-ui-ux-pro-max-skill",
+      "repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "localDirectory": "external-skills/nextlevelbuilder-ui-ux-pro-max-skill",
+      "category": "UI/UX",
+      "purpose": "设计系统、产品类型、密度与可访问性候选",
+      "updateMode": "git"
+    },
+    {
+      "name": "nutlope-hallmark",
+      "repository": "https://github.com/Nutlope/hallmark",
+      "localDirectory": "external-skills/nutlope-hallmark",
+      "category": "UI/UX",
+      "purpose": "反模板化设计审计与视觉质量方法来源",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "obra-superpowers",
+      "repository": "https://github.com/obra/superpowers",
+      "localDirectory": "external-skills/obra-superpowers",
+      "category": "研发流程",
+      "purpose": "设计讨论、计划与研发工作流方法参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "owl-designer-skills",
+      "repository": "https://github.com/Owl-Listener/designer-skills",
+      "localDirectory": "external-skills/owl-designer-skills",
+      "category": "产品设计",
+      "purpose": "研究、交互、设计系统和设计评审方法参考",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "petrkindlmann-qa-skills",
+      "repository": "https://github.com/petrkindlmann/qa-skills",
+      "localDirectory": "external-skills/petrkindlmann-qa-skills",
+      "category": "QA",
+      "purpose": "测试策略、验收与 QA 方法参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "refoundai-lenny-skills",
+      "repository": "https://github.com/RefoundAI/lenny-skills",
+      "localDirectory": "external-skills/refoundai-lenny-skills",
+      "category": "产品管理",
+      "purpose": "PRD、路线图、反馈分析与产品策略方法参考",
+      "updateMode": "source-record"
+    },
+    {
+      "name": "vipulgupta2048-codex-skills",
+      "repository": "https://github.com/vipulgupta2048/codex-skills",
+      "localDirectory": "external-skills/vipulgupta2048-codex-skills",
+      "category": "前端设计",
+      "purpose": "frontend-design 视觉层级与实现质量参考",
+      "updateMode": "git"
+    },
+    {
+      "name": "voltagent-awesome-codex-subagents",
+      "repository": "https://github.com/VoltAgent/awesome-codex-subagents",
+      "localDirectory": "external-skills/voltagent-awesome-codex-subagents",
+      "category": "Agent 工程",
+      "purpose": "Codex 子 Agent 角色与分工参考",
+      "updateMode": "git"
+    }
+  ]
+}

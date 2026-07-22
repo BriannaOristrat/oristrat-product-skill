@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oristrat 产品测试"
+  short_description: "分级执行冒烟、功能、批量回归与正式 OB 验收测试"
+  default_prompt: "Use $product-testing to select the smallest test mode, verify the requested scope, and report evidence with explicit deferred checks."

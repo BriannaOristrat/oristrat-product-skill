@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document Delivery Orchestration"
+  short_description: "统一编排 PRD、报告、手册与交付包的文档交付底座"
+  default_prompt: "Use $document-delivery-orchestration to produce an evidence-backed document deliverable, validate its content and formats, and hand off an approved package."

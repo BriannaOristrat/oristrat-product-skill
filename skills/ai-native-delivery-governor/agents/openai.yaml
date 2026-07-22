@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI原生交付总控"
+  short_description: "识别代码、文档或混合结果并组合对应交付底座"
+  default_prompt: "Use $ai-native-delivery-governor to classify the result as code, document, or mixed delivery, select the smallest application, run the required independent foundation gates, and preserve scoped approvals."

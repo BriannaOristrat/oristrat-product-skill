@@ -7,6 +7,8 @@ description: Use when reviewing 01_运行过程证据报告 for evidence complet
 
 Use this skill to review `01_运行过程证据报告.md/html/pdf`.
 
+Treat this as a specialized reviewer routed by `document-delivery-orchestration` for formal product-testing packages.
+
 Follow `../product-testing/references/checklists/01-evidence-report-review.md`.
 
 ## Minimum Checks

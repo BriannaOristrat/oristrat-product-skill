@@ -25,6 +25,10 @@ if (!config.tenantCode || !config.account || !config.password) {
 const md5 = (value) => createHash("md5").update(value).digest("hex");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function unwrapModel(payload) {
+  return payload?.model && typeof payload.model === "object" ? payload.model : payload;
+}
+
 function sanitizeModel(model) {
   if (!model || typeof model !== "object") return model;
   const text = JSON.stringify(model)
@@ -48,7 +52,8 @@ async function login() {
       tenantCode: config.tenantCode,
     }),
   });
-  const model = await response.json().catch(() => ({}));
+  const payload = await response.json().catch(() => ({}));
+  const model = unwrapModel(payload);
   const cookie = (response.headers.get("set-cookie") || "").split(";")[0];
   if (!response.ok || !cookie || model?.success === false) {
     throw new Error(`Login failed: ${JSON.stringify(sanitizeModel(model))}`);
@@ -73,7 +78,7 @@ async function api(cookie, path, body = {}, method = "POST") {
   } catch {
     parsed = { raw: text.slice(0, 500) };
   }
-  const model = parsed?.model && typeof parsed.model === "object" ? parsed.model : parsed;
+  const model = unwrapModel(parsed);
   return {
     ok: response.ok && model?.success !== false,
     status: response.status,

@@ -19,10 +19,11 @@
 | `borghei/Claude-Skills` | `external-skills/borghei-claude-skills/` | 产品设计师视角、PRD 到 repo/ticket/PR 计划 | MIT + Commons Clause，禁止销售软件本身 |
 | `Digidai/product-manager-skills` | `external-skills/digidai-product-manager-skills/` | SaaS PM 日常诊断、PRD critique、roadmap 和指标思考 | 上游 license 文件为 CC BY-NC-SA 4.0 |
 | `RefoundAI/lenny-skills` | `external-skills/refoundai-lenny-skills/` | Lenny 产品方法论：PRD、spec、roadmap、用户反馈、设计评审 | MIT |
+| `Nutlope/hallmark` | `external-skills/nutlope-hallmark/` | 前端设计预扫描、反模板化结构、真实性、Token、状态、响应式、UI 审计/改版/参考研究 | MIT；缓存仅记录来源，正式执行走已安装 Skill |
 
 ## 最近版本检查
 
-检查日期：2026-07-06
+基础来源检查日期：2026-07-06；Hallmark 单独复核日期：2026-07-20。
 
 | 来源 | 默认分支 | 检查到的 commit | 本地缓存状态 |
 |---|---|---|---|
@@ -31,6 +32,7 @@
 | `borghei/Claude-Skills` | `main` | `83dc60b0eed2e12da70df2b2bd57a973e38abee8` | 已缓存文件与上游一致 |
 | `Digidai/product-manager-skills` | `main` | `ab7a40662c8455ece631834dee9670b3322f465b` | 已缓存文件与上游一致 |
 | `RefoundAI/lenny-skills` | `main` | `280a57aa42fed3b6f35f51f0d9e71013b4c8ae74` | 已缓存文件与上游一致 |
+| `Nutlope/hallmark` | `main` | `aeb42fb354ff4efa36ab475773a082315a3af2ce` | 2026-07-20 已记录 v1.1.0 来源与 MIT License；不缓存执行正文 |
 
 ## 已缓存 Skill 清单
 
@@ -80,6 +82,12 @@
 - `analyzing-user-feedback`
 - `behavioral-product-design`
 
+### Nutlope Hallmark
+
+- 来源与许可证：`external-skills/nutlope-hallmark/`
+- 自研运行入口：`skills/oristrat-product-ui-governor/`
+- 正式外部入口：当前环境可发现的 `hallmark` Skill；不可用时执行自研视觉门禁，不从缓存运行
+
 ## 选择建议
 
 | 任务 | 优先参考 |
@@ -88,6 +96,7 @@
 | 用户故事和验收标准 | deanpeters `user-story`，RefoundAI `writing-specs-designs` |
 | 路线图和优先级 | deanpeters `roadmap-planning`、`prioritization-advisor`，RefoundAI `prioritizing-roadmap` |
 | 设计研究和用户理解 | Owl research 组，RefoundAI `analyzing-user-feedback` |
-| UX/UI/设计系统 | Owl UI/design-system/interaction 组，Borghei `product-designer` |
+| UX/UI/设计系统 | 先用 `oristrat-product-ui-governor`；方法参考 Owl UI/design-system/interaction 组、Borghei `product-designer` |
+| UI 审计、视觉改版、参考设计研究 | `oristrat-product-ui-governor`；Hallmark 仅作为可选外部执行能力和方法来源 |
 | 设计评审和可用性测试 | Owl design-ops/prototyping/visual-critique 组，RefoundAI `running-design-reviews`、`usability-testing` |
 | PRD 拆成工程任务 | Borghei `spec-to-repo` |

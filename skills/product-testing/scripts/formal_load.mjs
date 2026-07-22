@@ -155,7 +155,7 @@ function selectedHeaders(headers) {
 }
 
 function parsedSummary(parsed) {
-  const model = parsed?.model ?? parsed;
+  const model = unwrapModel(parsed);
   if (!model || typeof model !== "object") return null;
   return {
     success: model.success,
@@ -163,6 +163,10 @@ function parsedSummary(parsed) {
     message: truncateText(model.message || ""),
     messageKey: truncateText(model.messageKey || ""),
   };
+}
+
+function unwrapModel(payload) {
+  return payload?.model && typeof payload.model === "object" ? payload.model : payload;
 }
 
 function errorDetails(error) {
@@ -259,8 +263,8 @@ async function login() {
     throw new Error(`Login returned non-JSON response: HTTP ${response.status}`);
   }
 
-  const model = parsed.model ?? parsed;
-  if (!response.ok || !model.success) {
+  const model = unwrapModel(parsed);
+  if (!response.ok || model?.success === false) {
     throw new Error(`Login failed: HTTP ${response.status}, ${model.message || text.slice(0, 200)}`);
   }
 
@@ -324,8 +328,8 @@ async function requestScenario(scenario) {
       message = `non-json response: ${responseText.slice(0, 120)}`;
     }
 
-    const model = parsed?.model ?? parsed;
-    ok = response.ok && Boolean(model?.success);
+    const model = unwrapModel(parsed);
+    ok = response.ok && model?.success !== false;
     if (!ok) {
       message = model?.message || model?.messageKey || `HTTP ${status}`;
       failureKind = response.ok ? "business_failure_response" : "http_failure_response";

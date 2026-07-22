@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "selfDeveloped": [
+    {
+      "name": "ai-native-delivery-governor",
+      "source": "skills/ai-native-delivery-governor",
+      "installName": "ai-native-delivery-governor",
+      "installRequired": false
+    },
+    {
+      "name": "fullstack-delivery-orchestration",
+      "source": "skills/fullstack-delivery-orchestration",
+      "installName": "fullstack-delivery-orchestration",
+      "installRequired": false
+    },
+    {
+      "name": "oristrat-product-ui-governor",
+      "source": "skills/oristrat-product-ui-governor",
+      "installName": "oristrat-product-ui-governor",
+      "installRequired": false
+    },
+    {
+      "name": "product-design-management",
+      "source": "skills/product-design-management",
+      "installName": "product-design-management",
+      "installRequired": false
+    },
+    {
+      "name": "product-testing",
+      "source": "skills/product-testing",
+      "installName": "product-testing",
+      "installRequired": false
+    },
+    {
+      "name": "msce-engine-app-development",
+      "source": "skills/msce-engine-app-development",
+      "installName": "msce-engine-app-development",
+      "installRequired": true
+    },
+    {
+      "name": "task-council",
+      "source": "skills/task-council",
+      "installName": "task-council",
+      "installRequired": true
+    },
+    {
+      "name": "document-delivery-orchestration",
+      "source": "skills/document-delivery-orchestration",
+      "installName": "document-delivery-orchestration",
+      "installRequired": true
+    }
+  ],
+  "externalDependencies": [
+    {
+      "name": "ui-ux-pro-max",
+      "sourceRecord": "external-skills/nextlevelbuilder-ui-ux-pro-max-skill",
+      "license": "MIT",
+      "version": "2.11.0",
+      "reviewedCommit": "5c0946f66120079258e1efc8e436d78ec793877c",
+      "installName": "ui-ux-pro-max",
+      "installRequired": false,
+      "executionPolicy": "formal-installed-skill-or-cli-only"
+    },
+    {
+      "name": "hallmark",
+      "sourceRecord": "external-skills/nutlope-hallmark",
+      "license": "MIT",
+      "version": "1.1.0",
+      "reviewedCommit": "aeb42fb354ff4efa36ab475773a082315a3af2ce",
+      "installName": "hallmark",
+      "installRequired": false,
+      "executionPolicy": "installed-skill-only"
+    },
+    {
+      "name": "frontend-design",
+      "license": "external-runtime-capability",
+      "installName": "frontend-design",
+      "installRequired": false,
+      "executionPolicy": "installed-skill-only"
+    }
+  ]
+}

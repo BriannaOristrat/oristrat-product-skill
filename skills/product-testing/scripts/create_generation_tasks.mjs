@@ -24,6 +24,10 @@ if (!config.tenantCode || !config.account || !config.password) {
 const md5 = (value) => createHash("md5").update(value).digest("hex");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function unwrapModel(payload) {
+  return payload?.model && typeof payload.model === "object" ? payload.model : payload;
+}
+
 async function login() {
   const response = await fetch(`${config.baseUrl}${config.apiPrefix}/tenant/main/login`, {
     method: "POST",
@@ -38,7 +42,8 @@ async function login() {
       tenantCode: config.tenantCode,
     }),
   });
-  const model = await response.json().catch(() => ({}));
+  const payload = await response.json().catch(() => ({}));
+  const model = unwrapModel(payload);
   const cookie = (response.headers.get("set-cookie") || "").split(";")[0];
   if (!response.ok || !cookie || model?.success === false) {
     throw new Error(`Login failed: ${JSON.stringify(model)}`);
@@ -57,12 +62,13 @@ async function api(cookie, path, body = {}) {
     body: JSON.stringify(body),
   });
   const text = await response.text();
-  let model;
+  let payload;
   try {
-    model = JSON.parse(text);
+    payload = JSON.parse(text);
   } catch {
-    model = { raw: text };
+    payload = { raw: text };
   }
+  const model = unwrapModel(payload);
   return {
     ok: response.ok && model?.success !== false,
     status: response.status,

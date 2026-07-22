@@ -5,6 +5,8 @@ description: Use when Oristrat needs 需求分析, product design, product manag
 
 # Product Design Management
 
+This is an application Skill selected by `ai-native-delivery-governor` for requirements, PRD, and product-definition work. A specification-only result uses `DOCUMENT_DELIVERY`; implementation plus specification uses `MIXED_DELIVERY`; implementation without a material document result uses `CODE_DELIVERY`.
+
 Use this skill for Oristrat product design, product specification, and product manager workflows. Produce team-ready Chinese artifacts unless the user asks for another language.
 
 ## Operating Rules
@@ -19,9 +21,10 @@ Use this skill for Oristrat product design, product specification, and product m
 
 - Idea, vague request, or early product thinking: read `references/product-workflow.md`, then frame the problem, users, opportunity, and decision needed.
 - 需求分析, PRD, product spec, feature definition, or user story: read `references/templates-and-gates.md`, then produce a structured requirement analysis, PRD/spec, or user story with acceptance criteria.
-- Product design, UX flow, UI review, design system, or handoff: read `references/product-workflow.md` and `references/templates-and-gates.md`, then create the relevant design brief, flow, checklist, or review.
+- Product design, UX flow, UI review, design system, or handoff: read `references/product-workflow.md` and `references/templates-and-gates.md`, define the business/UX intent and acceptance criteria, then hand visual execution, UI audit/redesign, reference study, and browser-backed UI quality to `oristrat-product-ui-governor`.
 - Roadmap, prioritization, or trade-off decision: read `references/product-workflow.md`, then make the scoring logic explicit.
 - PRD to engineering tasks, tickets, branch/PR sequence, or delivery plan: read `references/templates-and-gates.md`, then decompose into implementation-ready units.
+- PM-controlled full-stack delivery with QA click testing, repeated agent handoffs, or release gates: use this skill first for PM scope and acceptance criteria, then hand off to `fullstack-delivery-orchestration`.
 
 ## External Skill Cache
 
@@ -37,5 +40,7 @@ Before saying the product/design/spec work is complete, check:
 - Scope includes in-scope, out-of-scope, dependencies, and open questions.
 - User experience includes primary flow, states, edge cases, and failure handling when relevant.
 - Engineering handoff includes acceptance criteria and testable behavior.
+- UI-heavy handoff names the surface type, first-viewport job, role/permission boundary, required states, responsive targets, and `oristrat-product-ui-governor` quality gate.
+- Full-stack delivery handoff names the PM decision owner, engineering slice order, QA evidence expectations, and release gate.
 - Decisions and assumptions are separated so the team can challenge them quickly.
 - No secrets, customer-sensitive data, local paths, tokens, or private account information are included.

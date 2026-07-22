@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fullstack Delivery Orchestration"
+  short_description: "总控按需调用的全栈交付编排底座"
+  default_prompt: "Use $fullstack-delivery-orchestration as a foundation capability to coordinate implementation sequencing, QA, runtime checks, strict MSCE submission validation, staged Git audit, reviews, and release gates."

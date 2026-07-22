@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oristrat Product UI Governor"
+  short_description: "治理 Oristrat 产品 UI、改版、审计与视觉质量门禁"
+  default_prompt: "Use $oristrat-product-ui-governor to audit or redesign this Oristrat product interface with business, UX, visual-quality, and browser-QA gates."

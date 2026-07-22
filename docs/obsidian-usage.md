@@ -12,7 +12,9 @@
 | Skill Catalog | [Skill Catalog](../catalog/README.md) |
 | 仓库结构 | [仓库结构说明](repository-structure.md) |
 | 来源治理 | [Skill 来源治理与 AI 路由规则](skill-source-governance.md) |
+| Task Council | [Task Council Skill](../skills/task-council/SKILL.md) |
 | Product Testing | [Product Testing Skill](../skills/product-testing/SKILL.md) |
+| Fullstack Delivery Orchestration | [Fullstack Delivery Orchestration Skill](../skills/fullstack-delivery-orchestration/SKILL.md) |
 | Product Testing 总览 | [Product Testing 总览](../skills/product-testing/references/overview.md) |
 | GitHub 提交门禁 | [GitHub 提交安全门禁](github-submit-safety-gate.md) |
 

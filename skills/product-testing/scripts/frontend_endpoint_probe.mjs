@@ -17,6 +17,10 @@ if (!tenantCode || !account || !password) {
 
 const md5 = (value) => createHash("md5").update(value).digest("hex");
 
+function unwrapModel(payload) {
+  return payload?.model && typeof payload.model === "object" ? payload.model : payload;
+}
+
 async function login() {
   const response = await fetch(`${baseUrl}${apiPrefix}/tenant/main/login`, {
     method: "POST",
@@ -33,9 +37,10 @@ async function login() {
   });
   const setCookie = response.headers.get("set-cookie") || "";
   const cookie = setCookie.split(";")[0];
-  const body = await response.json();
-  if (!response.ok || !cookie || body?.success === false) {
-    throw new Error(`Login failed: ${JSON.stringify(body)}`);
+  const payload = await response.json().catch(() => ({}));
+  const model = unwrapModel(payload);
+  if (!response.ok || !cookie || model?.success === false) {
+    throw new Error(`Login failed: ${JSON.stringify(model)}`);
   }
   return cookie;
 }

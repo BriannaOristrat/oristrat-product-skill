@@ -7,6 +7,8 @@ description: Use when reviewing final delivery package contents, zip archive, re
 
 Use this skill before handing over a delivery package.
 
+Treat this as a specialized package reviewer routed by `document-delivery-orchestration` when the product-testing package contract applies.
+
 Follow `../product-testing/references/checklists/05-final-delivery-gate.md`.
 Before any GitHub submission, also follow `../../docs/github-submit-safety-gate.md`.
 

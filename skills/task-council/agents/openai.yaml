@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Council"
+  short_description: "Align and challenge complex decisions through a council"
+  default_prompt: "Use $task-council to align the decision agenda and run a structured council for this complex task."
